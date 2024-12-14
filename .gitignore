@@ -1,0 +1,53 @@
+# Compilación de .NET
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+*.nuget.cache
+*.nuget.dgspec.json
+*.csproj.user
+*.csproj.nuget.g.props
+*.csproj.nuget.g.targets
+
+# Configuración de Rider/JetBrains
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Archivos de usuario específicos de Visual Studio
+*.vs/
+.vscode/
+
+# Configuración de OS y entorno
+.DS_Store
+Thumbs.db
+
+# Archivos de logs
+*.log
+
+# Archivos generados automáticamente
+wwwroot/
+!wwwroot/.keep
+
+# Dependencias de NPM (si utilizas librerías frontend)
+node_modules/
+package-lock.json
+
+# Archivos de configuración de depuración
+launchSettings.json
+
+# Dependencias locales (si estás probando paquetes localmente)
+*.local
+
+# Secretos y configuraciones sensibles
+secrets.json
+
+# Archivos de backup y temporales
+*.bak
+*.swp
+*.tmp
+*.old
+*.orig
