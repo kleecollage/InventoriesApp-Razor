@@ -1,0 +1,30 @@
+@page
+@model RPInventories.Pages.Brands.CreateModel
+
+@{
+    ViewData["Title"] = "Create Brand";
+}
+
+<h4>@ViewData["Title"]</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Brand.Name" class="control-label"></label>
+                <input asp-for="Brand.Name" class="form-control" />
+                <span asp-validation-for="Brand.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <button type="submit" class="btn btn-primary me-3">
+                    <i class="fa-solid fa-floppy-disk"></i>&nbsp;Create
+                </button>
+                <a asp-page="Index" class="btn btn-secondary">
+                    <i class="fa-solid fa-circle-arrow-left"></i>&nbsp;Return
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+

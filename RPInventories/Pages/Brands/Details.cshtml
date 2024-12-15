@@ -1,0 +1,29 @@
+@page
+@model RPInventories.Pages.Brands.DetailsModel
+
+@{
+    ViewData["Title"] = "Brand Details";
+}
+
+<h4>@ViewData["Title"]</h4>
+<hr />
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Brand.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Brand.Name)
+        </dd>
+    </dl>
+</div>
+<div class="row">
+    <div class="col">
+        <a asp-page="./Edit" asp-route-id="@Model.Brand.Id" class="btn btn-primary me-3">
+            <i class="fa-solid fa-pen-to-square"></i>&nbsp;Edit
+        </a>
+        <a asp-page="./Index" class="btn btn-secondary">
+            <i class="fa-solid fa-circle-arrow-left"></i>&nbsp;Back to List
+        </a>
+    </div>
+</div>

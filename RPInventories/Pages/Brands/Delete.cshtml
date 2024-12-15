@@ -1,0 +1,29 @@
+@page
+@model RPInventories.Pages.Brands.DeleteModel
+
+@{
+    ViewData["Title"] = "Want to remove the brand "+Model.Brand.Name+"?";
+}
+
+<h4>@ViewData["Title"]</h4>
+<hr />
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Brand.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Brand.Name)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <input type="hidden" asp-for="Brand.Id" />
+        <button type="submit" class="btn btn-danger m-3" >
+        <i class="fa-solid fa-trash"></i>&nbsp;Delete
+        </button>
+        <a asp-page="./Index" class="btn btn-secondary">
+            <i class="fa-solid fa-circle-arrow-left"></i>&nbsp;Back to List
+        </a>
+    </form>
+</div>
