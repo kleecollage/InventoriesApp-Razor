@@ -6,31 +6,12 @@
     ViewData["Title"] = "Brands";
 }
 
-<h1>@ViewData["Title"]</h1>
-<p class="text-end">
-    @Model.TotalRecords registers
-</p>
-<div class="row mb-3">
-    <div class="col-6">
-        <a class="btn btn-primary" asp-page="Create">
-            <i class="fa-solid fa-plus"></i>&nbsp;Create Brand
-        </a>
-    </div>
-    <div class="col-6">
-        <form>
-            <div class="input-group">
-                <input asp-for="SearchTerm" class="form-control" placeholder="Search Term" 
-                       aria-label="Search Term"/>
-                <button name="SearchBtn" id="SearchBtn" type="submit" class="btn btn-outline-info">
-                    <i class="fa-solid fa-magnifying-glass"></i>&nbsp;Search
-                </button>
-                <a asp-page="./Index" class="btn btn-outline-secondary">
-                    <i class="fa-solid fa-arrows-rotate"></i>&nbsp;Clear
-                </a>
-            </div>
-        </form>
-    </div>
-</div>
+@await Html.PartialAsync("Partials/Actions/CreateSearch", new CreateSearchViewModel
+{
+    SearchText = Model.SearchText,
+    CreateTitle = "Create Brand",
+    TotalRecords = Model.TotalRecords
+})
 
 <table class="table table-hover table-bordered table-striped">
     <thead class="bg-primary text-white">
@@ -58,7 +39,7 @@
 @Html.PagedListPager(Model.Brands, page=>Url.Action("Index", new
     {
         CurrentPage = page,
-        SearchTerm = Model.SearchTerm
+        SearchText = Model.SearchText
     }), 
     new PagedListRenderOptions
     { 

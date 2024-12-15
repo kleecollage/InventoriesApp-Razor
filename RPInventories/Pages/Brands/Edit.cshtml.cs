@@ -47,6 +47,15 @@ public class EditModel : PageModel
             _serviceNotify.Error($"Fix the problems before editing brand {Brand.Name}");
             return Page();
         }
+        
+        var brandExistsOnDb = _context.Brands.Any(b => 
+            b.Name.ToLower().Trim() == Brand.Name.ToLower().Trim() && b.Id != Brand.Id);
+        
+        if (brandExistsOnDb)
+        {
+            _serviceNotify.Warning($"Brand {Brand.Name} already exists");
+            return Page();
+        }
 
         _context.Attach(Brand).State = EntityState.Modified;
 

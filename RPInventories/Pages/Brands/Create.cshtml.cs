@@ -33,6 +33,12 @@ public class CreateModel : PageModel
             return Page();
         }
 
+        var brandExistsOnDb = _context.Brands.Any(b => b.Name.ToLower().Trim() == Brand.Name.ToLower().Trim());
+        if (brandExistsOnDb)
+        {
+            _serviceNotify.Error($"Brand {Brand.Name} already exists.");
+            return Page();
+        }
         _context.Brands.Add(Brand);
         await _context.SaveChangesAsync();
         _serviceNotify.Success($"SUCCESS. Brand {Brand.Name} added.");

@@ -22,7 +22,7 @@ public class IndexModel : PageModel
     public IPagedList<Brand> Brands { get; set; }
 
     [BindProperty(SupportsGet = true)] public int? CurrentPage { get; set; }
-    [BindProperty(SupportsGet = true)] public string SearchTerm { get; set; }
+    [BindProperty(SupportsGet = true)] public string SearchText { get; set; }
     public int TotalRecords { get; set; }
 
 
@@ -31,9 +31,9 @@ public class IndexModel : PageModel
         var recordsPerPage = _config.GetValue("RecordsPerPage", 3);
         var consult = _context.Brands.Select(b => b);
 
-        if (!String.IsNullOrEmpty(SearchTerm))
+        if (!String.IsNullOrEmpty(SearchText))
         {
-            consult = consult.Where(b => b.Name.Contains(SearchTerm));
+            consult = consult.Where(b => b.Name.Contains(SearchText));
         }
         
         TotalRecords = await consult.CountAsync();
