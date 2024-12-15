@@ -19,11 +19,6 @@
     
     <form method="post">
         <input type="hidden" asp-for="Brand.Id" />
-        <button type="submit" class="btn btn-danger m-3" >
-        <i class="fa-solid fa-trash"></i>&nbsp;Delete
-        </button>
-        <a asp-page="./Index" class="btn btn-secondary">
-            <i class="fa-solid fa-circle-arrow-left"></i>&nbsp;Back to List
-        </a>
+        <partial name="Partials/Actions/_Delete"/>
     </form>
 </div>

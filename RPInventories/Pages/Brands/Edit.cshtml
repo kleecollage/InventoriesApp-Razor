@@ -18,12 +18,7 @@
                 <span asp-validation-for="Brand.Name" class="text-danger"></span>
             </div>
             <div class="form-group mt-3">
-                <button type="submit" class="btn btn-primary me-3" >
-                    <i class="fa-solid fa-floppy-disk"></i>&nbsp;Update
-                </button>
-                <a asp-page="./Index" class="btn btn-secondary">
-                    <i class="fa-solid fa-circle-arrow-left"></i>&nbsp;Return
-                </a>
+                <partial name="Partials/Actions/_Edit"/>
             </div>
         </form>
     </div>

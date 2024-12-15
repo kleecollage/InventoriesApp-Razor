@@ -1,10 +1,15 @@
 using AspNetCoreHero.ToastNotification;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using RPInventories.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.Configure<RazorViewEngineOptions>(options =>
+{
+    options.PageViewLocationFormats.Add("/Pages/Partials/{0}" + RazorViewEngine.ViewExtension);
+});
 // toast notification
 builder.Services.AddNotyf(config =>
 {
