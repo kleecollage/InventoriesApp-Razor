@@ -1,3 +1,4 @@
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +9,12 @@ namespace RPInventories.Pages.Brands;
 public class DeleteModel : PageModel
 {
     private readonly InventoriesContext _context;
+    private readonly INotyfService _serviceNotify;
 
-    public DeleteModel(InventoriesContext context)
+    public DeleteModel(InventoriesContext context,  INotyfService serviceNotify)
     {
         _context = context;
+        _serviceNotify = serviceNotify;
     }
 
     [BindProperty]
@@ -21,6 +24,7 @@ public class DeleteModel : PageModel
     {
         if (id == null)
         {
+            _serviceNotify.Warning($"Brand ID must not be null");
             return NotFound();
         }
 
@@ -28,6 +32,7 @@ public class DeleteModel : PageModel
 
         if (brand == null)
         {
+            _serviceNotify.Warning($"Brand with ID {id} does not exist");
             return NotFound();
         }
 
@@ -49,7 +54,7 @@ public class DeleteModel : PageModel
             _context.Brands.Remove(Brand);
             await _context.SaveChangesAsync();
         }
-
+        _serviceNotify.Success($"SUCCESS. {Brand.Name} removed correctly!");
         return RedirectToPage("./Index");
     }
 }

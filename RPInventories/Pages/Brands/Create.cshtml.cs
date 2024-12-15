@@ -1,3 +1,4 @@
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RPInventories.Data;
@@ -7,10 +8,12 @@ namespace RPInventories.Pages.Brands;
 public class CreateModel : PageModel
 {
     private readonly InventoriesContext _context;
+    private readonly INotyfService _serviceNotify;
 
-    public CreateModel(InventoriesContext context)
+    public CreateModel(InventoriesContext context, INotyfService serviceNotify)
     {
         _context = context;
+        _serviceNotify = serviceNotify;
     }
 
     public IActionResult OnGet()
@@ -26,11 +29,13 @@ public class CreateModel : PageModel
     {
         if (!ModelState.IsValid)
         {
+            _serviceNotify.Error($"Fix the problems with {Brand.Name} and try again.");
             return Page();
         }
 
         _context.Brands.Add(Brand);
         await _context.SaveChangesAsync();
+        _serviceNotify.Success($"SUCCESS. Brand {Brand.Name} added.");
 
         return RedirectToPage("./Index");
     }

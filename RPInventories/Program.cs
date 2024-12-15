@@ -1,10 +1,18 @@
+using AspNetCoreHero.ToastNotification;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using RPInventories.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+// toast notification
+builder.Services.AddNotyf(config =>
+{
+    config.DurationInSeconds = 5;
+    config.IsDismissable = true;
+    config.Position = NotyfPosition.BottomRight;
+});
+// DB Context
 builder.Services.AddDbContext<InventoriesContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("InventoriesContext") ?? throw new InvalidOperationException("Connection string 'InventoriesContext' not found.")));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
