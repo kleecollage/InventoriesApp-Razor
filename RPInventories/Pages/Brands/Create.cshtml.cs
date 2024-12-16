@@ -21,8 +21,7 @@ public class CreateModel : PageModel
         return Page();
     }
 
-    [BindProperty]
-    public Brand Brand { get; set; }
+    [BindProperty] public Brand Brand { get; set; }
 
     // For more information, see https://aka.ms/RazorPagesCRUD.
     public async Task<IActionResult> OnPostAsync()
@@ -39,6 +38,7 @@ public class CreateModel : PageModel
             _serviceNotify.Error($"Brand {Brand.Name} already exists.");
             return Page();
         }
+        
         _context.Brands.Add(Brand);
         await _context.SaveChangesAsync();
         _serviceNotify.Success($"SUCCESS. Brand {Brand.Name} added.");

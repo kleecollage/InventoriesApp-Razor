@@ -12,7 +12,7 @@ public static class DbInitializer
             return; // BD init with info
         }
         
-        // Add some registers if there aren't any
+        // Add registers if there aren't any
         var brands = new Brand[]
         {
             new Brand { Name = "Rino" },
@@ -27,11 +27,31 @@ public static class DbInitializer
 
         var departments = new Department[]
         {
-            new Department { Name = "IT" },
-            new Department { Name = "RH" },
-            new Department { Name = "Computing" },
-            new Department { Name = "Deports" },
-            new Department { Name = "General Administration" },
+            new Department{
+                Name="General Administration",
+                Description= "General Administration",
+                CreatedAt= DateTime.Now,
+            },
+            new Department{
+                Name="Human Resources",
+                Description= "Human Resources",
+                CreatedAt= DateTime.Now
+            },
+            new Department{
+                Name="Material Resources",
+                Description= "Material Resources",
+                CreatedAt= DateTime.Now
+            },
+            new Department{
+                Name="Computing",
+                Description= "Computing",
+                CreatedAt= DateTime.Now
+            },
+            new Department{
+                Name="Deports",
+                Description= "Deports",
+                CreatedAt= DateTime.Now
+            }
         };
         context.Departments.AddRange(departments);
         context.SaveChanges();

@@ -17,8 +17,7 @@ public class DeleteModel : PageModel
         _serviceNotify = serviceNotify;
     }
 
-    [BindProperty]
-    public Brand Brand { get; set; }
+    [BindProperty] public Brand Brand { get; set; }
 
     public async Task<IActionResult> OnGetAsync(int? id)
     {

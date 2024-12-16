@@ -11,5 +11,6 @@ public class Brand
     [MaxLength(50, ErrorMessage = "Brand name cannot be more than 50 characters")]
     [Display(Name ="Brand")]
     public string Name { get; set; }
+    
     public virtual ICollection<Product> Products { get; set; }
 }

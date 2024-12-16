@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using RPInventories.Data;
 using RPInventories.Models;
 
-namespace RPInventories.Pages.Brands;
+namespace RPInventories.Pages.Departments;
 public class EditModel : PageModel
 {
     private readonly InventoriesContext _context;
@@ -17,23 +17,23 @@ public class EditModel : PageModel
         _serviceNotify = serviceNotify;
     }
 
-    [BindProperty] public Brand Brand { get; set; }
+    [BindProperty] public Department Department { get; set; }
 
     public async Task<IActionResult> OnGetAsync(int? id)
     {
         if (id == null)
         {
-            _serviceNotify.Warning($"Brand ID must not be null");
+            _serviceNotify.Warning($"Department ID must not be null");
             return NotFound();
         }
 
-        var brand =  await _context.Brands.FirstOrDefaultAsync(m => m.Id == id);
-        if (brand == null)
+        var department =  await _context.Departments.FirstOrDefaultAsync(m => m.Id == id);
+        if (department == null)
         {
-            _serviceNotify.Warning($"Brand with ID {id} does not exist");
+            _serviceNotify.Warning($"Department with ID {id} does not exist");
             return NotFound();
         }
-        Brand = brand;
+        Department = department;
         return Page();
     }
 
@@ -43,20 +43,21 @@ public class EditModel : PageModel
     {
         if (!ModelState.IsValid)
         {
-            _serviceNotify.Error($"Fix the problems before editing brand {Brand.Name}");
+            _serviceNotify.Error($"Fix the problems before editing depertment {Department.Name}");
             return Page();
         }
         
-        var brandExistsOnDb = _context.Brands.Any(b => 
-            b.Name.ToLower().Trim() == Brand.Name.ToLower().Trim() && b.Id != Brand.Id);
+        var departmetnExistsOnDb = _context.Departments.Any(b => 
+            b.Name.ToLower().Trim() == Department.Name.ToLower().Trim() && b.Id != Department.Id);
         
-        if (brandExistsOnDb)
+        if (departmetnExistsOnDb)
         {
-            _serviceNotify.Warning($"Brand {Brand.Name} already exists");
+            _serviceNotify.Warning($"Department {Department.Name} already exists");
             return Page();
         }
 
-        _context.Attach(Brand).State = EntityState.Modified;
+
+        _context.Attach(Department).State = EntityState.Modified;
 
         try
         {
@@ -64,19 +65,19 @@ public class EditModel : PageModel
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!BrandExists(Brand.Id))
+            if (!DepartmentExists(Department.Id))
             {
                 return NotFound();
             }
 
             throw;
         }
-        _serviceNotify.Success($"SUCCESS. {Brand.Name} updated correctly");
+        _serviceNotify.Success($"SUCCESS. {Department.Name} updated correctly");
         return RedirectToPage("./Index");
     }
 
-    private bool BrandExists(int id)
+    private bool DepartmentExists(int id)
     {
-        return _context.Brands.Any(e => e.Id == id);
+        return _context.Departments.Any(e => e.Id == id);
     }
 }
