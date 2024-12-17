@@ -61,6 +61,7 @@ public class LoginModel : PageModel
                 {
                     new Claim(ClaimTypes.Name, userDb.Username),
                     new Claim("FullName", userDb.Name + " " + userDb.LastName),
+                    new Claim(ClaimTypes.Role, userDb.Profile.Name)
                 };
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 

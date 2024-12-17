@@ -9,8 +9,27 @@ using RPInventories.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorPages();
+// Add services to container.
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizeFolder("/Profiles", "Administrators");
+    options.Conventions.AuthorizeFolder("/Users", "Administrators");
+    options.Conventions.AuthorizeFolder("/Departments", "Administrators");
+    options.Conventions.AuthorizeFolder("/Brands", "CompanyEmployees");
+    options.Conventions.AuthorizeFolder("/Products", "Organization");
+});
+// Auth policy's
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Administrators", policy => 
+        policy.RequireRole("Admin"));
+    
+    options.AddPolicy("CompanyEmployees", policy => 
+        policy.RequireRole("Admin", "Employee"));
+    
+    options.AddPolicy("Organization", policy => 
+        policy.RequireRole("Admin", "Employee", "Guest"));
+});
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

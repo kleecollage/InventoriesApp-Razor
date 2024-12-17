@@ -7,6 +7,7 @@ using X.PagedList;
 using X.PagedList.Extensions;
 
 namespace RPInventories.Pages.Profiles;
+
 public class IndexModel : PageModel
 {
     private readonly InventoriesContext _context;
