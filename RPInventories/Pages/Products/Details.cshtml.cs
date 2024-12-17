@@ -23,7 +23,11 @@ public class DetailsModel : PageModel
             return NotFound();
         }
 
-        var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+        var product = await _context.Products
+            .Include(p => p.Brand)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.Id == id);
+        
         if (product == null)
         {
             return NotFound();

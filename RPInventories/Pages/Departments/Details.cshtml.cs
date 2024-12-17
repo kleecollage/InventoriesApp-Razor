@@ -22,7 +22,9 @@ public class DetailsModel : PageModel
             return NotFound();
         }
 
-        var department = await _context.Departments.FirstOrDefaultAsync(m => m.Id == id);
+        var department = await _context.Departments
+            .AsNoTracking()
+            .FirstOrDefaultAsync(m => m.Id == id);
         if (department == null)
         {
             return NotFound();

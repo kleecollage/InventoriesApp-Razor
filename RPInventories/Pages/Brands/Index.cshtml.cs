@@ -29,7 +29,9 @@ public class IndexModel : PageModel
     public async Task OnGetAsync()
     {
         var recordsPerPage = _config.GetValue("RecordsPerPage", 3);
-        var consult = _context.Brands.Select(b => b);
+        var consult = _context.Brands
+            .AsNoTracking()
+            .Select(b => b);
 
         if (!String.IsNullOrEmpty(SearchText))
         {

@@ -28,7 +28,9 @@ public class IndexModel : PageModel
     public async Task OnGetAsync()
     {
         var recordsPerPage = _config.GetValue("RecordsPerPage", 3);
-        var consult = _context.Departments.Select(d => d);
+        var consult = _context.Departments
+            .AsNoTracking()
+            .Select(d => d);
 
         if (!String.IsNullOrEmpty(SearchText))
         {

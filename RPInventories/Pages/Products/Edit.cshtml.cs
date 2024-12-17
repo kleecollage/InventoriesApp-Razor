@@ -56,7 +56,7 @@ public class EditModel : PageModel
         
         if (existsProductDb)
         {
-            Brands = new SelectList(_context.Brands, "Id", "Name");
+            Brands = new SelectList(_context.Brands.AsNoTracking(), "Id", "Name");
             _serviceNotify.Warning($"Product with name ${Product.Name} already exists");
             return Page();
         }

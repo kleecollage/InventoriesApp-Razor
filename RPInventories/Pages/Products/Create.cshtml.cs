@@ -2,6 +2,7 @@ using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using RPInventories.Data;
 using RPInventories.Models;
 
@@ -19,7 +20,7 @@ public class CreateModel : PageModel
 
     public IActionResult OnGet()
     {
-    Brands = new SelectList(_context.Brands, "Id", "Name");
+    Brands = new SelectList(_context.Brands.AsNoTracking(), "Id", "Name");
         return Page();
     }
 
@@ -31,7 +32,7 @@ public class CreateModel : PageModel
     {
         if (!ModelState.IsValid)
         {
-            Brands = new SelectList(_context.Brands, "Id", "Name");
+            Brands = new SelectList(_context.Brands.AsNoTracking(), "Id", "Name");
             _serviceNotify.Error("Fix the problems before continue");
             return Page();
         }
@@ -39,7 +40,7 @@ public class CreateModel : PageModel
         var existsProductDb = _context.Products.Any(p => p.Name.ToLower().Trim() == Product.Name.ToLower().Trim());
         if (existsProductDb)
         {
-            Brands = new SelectList(_context.Brands, "Id", "Name");
+            Brands = new SelectList(_context.Brands.AsNoTracking(), "Id", "Name");
             _serviceNotify.Error($"Product with name ${Product.Name} already exists");
             return Page();
         }
