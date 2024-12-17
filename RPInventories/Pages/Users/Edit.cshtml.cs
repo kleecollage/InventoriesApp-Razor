@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using RPInventories.Data;
 using RPInventories.Models;
 
-namespace RPInventories.Pages.Products;
+namespace RPInventories.Pages.Users;
 public class EditModel : PageModel
 {
     private readonly InventoriesContext _context;
@@ -18,25 +18,26 @@ public class EditModel : PageModel
         _serviceNotify = serviceNotify;
     }
 
-    [BindProperty] public Product Product { get; set; }
-    public SelectList Brands { get; set; }
+    [BindProperty] public new User User { get; set; }
+    public SelectList Profiles { get; set; }
 
     public async Task<IActionResult> OnGetAsync(int? id)
     {
         if (id == null)
         {
-            _serviceNotify.Warning($"Product ID must not be null");
+            _serviceNotify.Warning($"User ID must not be null");
             return NotFound();
         }
 
-        Product =  await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
-        if (Product == null)
+        User =  await _context.User.FirstOrDefaultAsync(u => u.Id == id);
+        
+        if (User == null)
         {
-            _serviceNotify.Warning($"Product with ID {id} does not exist");
+            _serviceNotify.Warning($"User with ID {id} does not exist");
             return NotFound();
         }
         
-        Brands = new SelectList(_context.Brands.AsNoTracking(), "Id", "Name");
+        Profiles = new SelectList(_context.Profile, "Id", "Name");
         
         return Page();
     }
@@ -47,21 +48,21 @@ public class EditModel : PageModel
     {
         if (!ModelState.IsValid)
         {
-            Brands = new SelectList(_context.Brands.AsNoTracking(), "Id", "Name");
+            Profiles = new SelectList(_context.Profile.AsNoTracking(), "Id", "Name");
             return Page();
         }
         
-        var existsProductDb = await _context.Products.AnyAsync(m => 
-            m.Name.ToLower().Trim() == Product.Name.ToLower().Trim() && m.Id != Product.Id);
+        var existsUserDb = await _context.Users.AnyAsync(m => 
+            m.Name.ToLower().Trim() == User.Email.ToLower().Trim() && m.Id != User.Id);
         
-        if (existsProductDb)
+        if (existsUserDb)
         {
-            Brands = new SelectList(_context.Brands.AsNoTracking(), "Id", "Name");
-            _serviceNotify.Warning($"Product with name ${Product.Name} already exists");
+            Profiles = new SelectList(_context.Brands.AsNoTracking(), "Id", "Email");
+            _serviceNotify.Warning($"User with email ${User.Email} already exists");
             return Page();
         }
-        
-        _context.Attach(Product).State = EntityState.Modified;
+
+        _context.Attach(User).State = EntityState.Modified;
 
         try
         {
@@ -69,20 +70,19 @@ public class EditModel : PageModel
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!ProductExists(Product.Id))
+            if (!UserExists(User.Id))
             {
                 return NotFound();
             }
 
             throw;
         }
-        _serviceNotify.Success($"SUCCESS. {Product.Name} updated correctly");
-        
+        _serviceNotify.Success($"SUCCESS. {User.Name} updated correctly");
         return RedirectToPage("./Index");
     }
 
-    private bool ProductExists(int id)
+    private bool UserExists(int id)
     {
-        return _context.Products.Any(e => e.Id == id);
+        return _context.User.Any(e => e.Id == id);
     }
 }

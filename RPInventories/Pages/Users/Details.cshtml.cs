@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using RPInventories.Data;
 using RPInventories.Models;
 
-namespace RPInventories.Pages.Products;
+namespace RPInventories.Pages.Users;
 public class DetailsModel : PageModel
 {
     private readonly InventoriesContext _context;
@@ -14,22 +14,25 @@ public class DetailsModel : PageModel
         _context = context;
     }
 
-    public Product Product { get; set; }
+    public new User User { get; set; }
 
     public async Task<IActionResult> OnGetAsync(int? id)
     {
         if (id == null)
+        {
             return NotFound();
+        }
 
-        var product = await _context.Products
-            .Include(p => p.Brand)
+        var user = await _context.User
             .AsNoTracking()
-            .FirstOrDefaultAsync(p => p.Id == id);
+            .FirstOrDefaultAsync(m => m.Id == id);
         
-        if (product == null)
+        if (user == null)
+        {
             return NotFound();
+        }
 
-        Product = product;
+        User = user;
         return Page();
     }
 }

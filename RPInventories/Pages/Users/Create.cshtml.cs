@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using RPInventories.Data;
 using RPInventories.Models;
 
-namespace RPInventories.Pages.Products;
+namespace RPInventories.Pages.Users;
 public class CreateModel : PageModel
 {
     private readonly InventoriesContext _context;
@@ -19,37 +19,37 @@ public class CreateModel : PageModel
     }
 
     public IActionResult OnGet()
-    {
-    Brands = new SelectList(_context.Brands.AsNoTracking(), "Id", "Name");
+    { 
+        Profiles = new SelectList(_context.Profile, "Id", "Name");
         return Page();
     }
 
-    [BindProperty] public Product Product { get; set; }
-    public SelectList Brands { get; set; }
+    [BindProperty] public new User User { get; set; }
+    public SelectList Profiles { get; set; }
 
     // For more information, see https://aka.ms/RazorPagesCRUD.
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid)
         {
-            Brands = new SelectList(_context.Brands.AsNoTracking(), "Id", "Name");
+            Profiles = new SelectList(_context.Profiles.AsNoTracking(), "Id", "Email");
             _serviceNotify.Error("Fix the problems before continue");
             return Page();
         }
         
-        var existsProductDb = _context.Products.Any(p => 
-            p.Name.ToLower().Trim() == Product.Name.ToLower().Trim());
-        if (existsProductDb)
+        var existsUserDb = _context.Users.Any(p => 
+            p.Name.ToLower().Trim() == User.Name.ToLower().Trim());
+        if (existsUserDb)
         {
-            Brands = new SelectList(_context.Brands.AsNoTracking(), "Id", "Name");
-            _serviceNotify.Error($"Product with name ${Product.Name} already exists");
+            Profiles = new SelectList(_context.Users.AsNoTracking(), "Id", "Email");
+            _serviceNotify.Error($"User with email ${User.Email} already exists");
             return Page();
         }
 
-        _context.Products.Add(Product);
+        _context.User.Add(User);
         await _context.SaveChangesAsync();
-        _serviceNotify.Success($"SUCCESS. Product {Product.Name} added.");
-
+        _serviceNotify.Success($"SUCCESS. Product {User.Username} added.");
+        
         return RedirectToPage("./Index");
     }
 }

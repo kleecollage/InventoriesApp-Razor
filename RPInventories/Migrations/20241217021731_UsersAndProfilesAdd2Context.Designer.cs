@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RPInventories.Data;
 
@@ -11,9 +12,11 @@ using RPInventories.Data;
 namespace RPInventories.Migrations
 {
     [DbContext(typeof(InventoriesContext))]
-    partial class InventoriesContextModelSnapshot : ModelSnapshot
+    [Migration("20241217021731_UsersAndProfilesAdd2Context")]
+    partial class UsersAndProfilesAdd2Context
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,7 +117,7 @@ namespace RPInventories.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Profile", (string)null);
+                    b.ToTable("Profile");
                 });
 
             modelBuilder.Entity("RPInventories.Models.User", b =>
@@ -155,7 +158,7 @@ namespace RPInventories.Migrations
 
                     b.HasIndex("ProfileId");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("RPInventories.Models.Product", b =>

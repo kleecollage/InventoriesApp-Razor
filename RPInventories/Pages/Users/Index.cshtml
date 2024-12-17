@@ -1,0 +1,86 @@
+@page
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using X.PagedList.Mvc.Core
+@model RPInventories.Pages.Users.IndexModel
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+@await Html.PartialAsync("Partials/Actions/CreateSearch", new CreateSearchViewModel
+{
+    SearchText = Model.SearchText,
+    CreateTitle = "Create User",
+    TotalRecords = Model.TotalRecords
+})
+
+<table class="table table-hover table-bordered table-striped">
+    <thead class="bg-primary text-white">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].Username)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].Password)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].Phone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].Profile)
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Users) {
+        <tr class="text-center">
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Username)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Password)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Profile.Name)
+            </td>
+            <td>
+                <partial name="Partials/Actions/_Crud" model="item.Id"/>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@Html.PagedListPager(Model.Users, page=>Url.Action("Index", new
+    {
+        CurrentPage = page, 
+        Model.SearchText
+    }),
+    new PagedListRenderOptions
+    {
+        LiElementClasses = new[] {"page-item"},
+        PageClasses = new[] {"page-link"}
+    }
+)

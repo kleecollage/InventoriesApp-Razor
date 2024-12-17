@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using RPInventories.Data;
 using RPInventories.Models;
 
-namespace RPInventories.Pages.Products;
+namespace RPInventories.Pages.Profiles;
 public class CreateModel : PageModel
 {
     private readonly InventoriesContext _context;
@@ -20,36 +20,32 @@ public class CreateModel : PageModel
 
     public IActionResult OnGet()
     {
-    Brands = new SelectList(_context.Brands.AsNoTracking(), "Id", "Name");
         return Page();
-    }
-
-    [BindProperty] public Product Product { get; set; }
-    public SelectList Brands { get; set; }
+    } 
+    
+    [BindProperty] public Profile Profile { get; set; }
 
     // For more information, see https://aka.ms/RazorPagesCRUD.
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid)
         {
-            Brands = new SelectList(_context.Brands.AsNoTracking(), "Id", "Name");
             _serviceNotify.Error("Fix the problems before continue");
             return Page();
         }
         
-        var existsProductDb = _context.Products.Any(p => 
-            p.Name.ToLower().Trim() == Product.Name.ToLower().Trim());
-        if (existsProductDb)
+        var existsProfileDb = _context.Profiles.Any(p => 
+            p.Name.ToLower().Trim() == Profile.Name.ToLower().Trim());
+        if (existsProfileDb)
         {
-            Brands = new SelectList(_context.Brands.AsNoTracking(), "Id", "Name");
-            _serviceNotify.Error($"Product with name ${Product.Name} already exists");
+            _serviceNotify.Error($"Profile with name ${Profile.Name} already exists");
             return Page();
         }
 
-        _context.Products.Add(Product);
+        _context.Profile.Add(Profile);
         await _context.SaveChangesAsync();
-        _serviceNotify.Success($"SUCCESS. Product {Product.Name} added.");
-
+        _serviceNotify.Success($"SUCCESS. Profile {Profile.Name} added.");
+        
         return RedirectToPage("./Index");
     }
 }

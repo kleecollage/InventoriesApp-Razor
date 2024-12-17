@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using RPInventories.Data;
 using RPInventories.Models;
 
-namespace RPInventories.Pages.Products;
+namespace RPInventories.Pages.Users;
 public class DeleteModel : PageModel
 {
     private readonly InventoriesContext _context;
@@ -17,40 +17,42 @@ public class DeleteModel : PageModel
         _serviceNotify = serviceNotify;
     }
 
-    [BindProperty] public Product Product { get; set; }
+    [BindProperty] public new User User { get; set; }
 
     public async Task<IActionResult> OnGetAsync(int? id)
     {
-        if (id == null)
+        if (id == null) 
+            return NotFound();
+
+        var user = await _context.User.FirstOrDefaultAsync(m => m.Id == id);
+
+        if (user == null)
         {
+            _serviceNotify.Warning($"User ID must not be null");
             return NotFound();
         }
 
-        var product = await _context.Products.FirstOrDefaultAsync(d => d.Id == id);
-
-        if (product == null)
-        {
-            _serviceNotify.Warning($"Product {Product.Name} not found");
-            return NotFound();
-        }
-
-        Product = product;
+        User = user;
+        
         return Page();
     }
 
     public async Task<IActionResult> OnPostAsync(int? id)
     {
         if (id == null)
-            return NotFound();
-
-        var product = await _context.Products.FindAsync(id);
-        if (product != null)
         {
-            Product = product;
-            _context.Products.Remove(Product);
+            return NotFound();
+        }
+
+        var user = await _context.User.FindAsync(id);
+        if (user != null)
+        {
+            User = user;
+            _context.User.Remove(User);
             await _context.SaveChangesAsync();
         }
-        _serviceNotify.Success($"SUCCESS. {Product.Name} removed correctly!");
+        
+        _serviceNotify.Success($"SUCCESS. {User.Name} removed correctly!");
         
         return RedirectToPage("./Index");
     }
