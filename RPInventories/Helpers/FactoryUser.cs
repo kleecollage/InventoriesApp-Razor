@@ -30,7 +30,7 @@ public class FactoryUser
 
     public UserEditViewModel CreateUserEdit(User user)
     {
-        return new UserEditViewModel()
+        return new UserEditViewModel
         {
             Id = user.Id,
             LastName = user.LastName,
@@ -42,13 +42,27 @@ public class FactoryUser
         };
     }
 
-    public void UpdateDataUser(UserEditViewModel user, User userDb)
+    public void UpdateDataUser(UserEditViewModel userVm, User userDb)
     {
-        userDb.Phone = user.Phone;
-        userDb.Email = user.Email;
-        userDb.Name = user.Name;
-        userDb.LastName = user.LastName;
-        userDb.ProfileId = user.ProfileId;
+        userDb.Phone = userVm.Phone;
+        userDb.Email = userVm.Email;
+        userDb.Name = userVm.Name;
+        userDb.LastName = userVm.LastName;
+        userDb.ProfileId = userVm.ProfileId;
+    }
+
+    public UserChangePasswordViewModel CreateUserChangePassword(User user)
+    {
+        return new UserChangePasswordViewModel
+        {
+            Id = user.Id,
+            Username = user.Username,
+        };
+    }
+
+    public void UpdatePasswordUser(UserChangePasswordViewModel userVm, User userDb)
+    {
+        userDb.Password = _passwordHasher.HashPassword(userDb, userVm.Password);
     }
 }
 
