@@ -28,7 +28,7 @@ namespace RPInventories.Pages.Departments
                 return NotFound();
             }
 
-            var department = await _context.Departments.FirstOrDefaultAsync(m => m.Id == id);
+            var department = await _context.Departments.FirstOrDefaultAsync(d => d.Id == id);
 
             if (department == null)
             {

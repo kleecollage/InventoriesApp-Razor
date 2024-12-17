@@ -6,7 +6,7 @@ using RPInventories.Models;
 using X.PagedList;
 using X.PagedList.Extensions;
 
-namespace RPInventories.Pages.Departaments;
+namespace RPInventories.Pages.Departments;
 public class IndexModel : PageModel
 {
     private readonly InventoriesContext _context;
@@ -28,11 +28,11 @@ public class IndexModel : PageModel
     public async Task OnGetAsync()
     {
         var recordsPerPage = _config.GetValue("RecordsPerPage", 3);
-        var consult = _context.Departments.Select(b => b);
+        var consult = _context.Departments.Select(d => d);
 
         if (!String.IsNullOrEmpty(SearchText))
         {
-            consult = consult.Where(b => b.Name.Contains(SearchText));
+            consult = consult.Where(d => d.Name.Contains(SearchText));
         }
         
         TotalRecords = await consult.CountAsync();
