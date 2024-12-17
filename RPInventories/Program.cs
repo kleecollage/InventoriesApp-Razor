@@ -40,7 +40,7 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<InventoriesContext>();
-    context.Database.EnsureCreated();
+    // context.Database.EnsureCreated(); // Only for testing, when migrations and data persistence are disabled
     DbInitializer.Initialize(context);
 }
 
