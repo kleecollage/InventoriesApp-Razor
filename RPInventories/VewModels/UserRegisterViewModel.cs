@@ -28,6 +28,7 @@ public class UserRegisterViewModel
     [MinLength(5, ErrorMessage = "Password must be at least 5 characters"),
      MaxLength(20, ErrorMessage = "Password cannot exceed 20 characters")]
     [DataType(DataType.Password)]
+    [Display(Name = "Confirm Password")]
     [Compare("Password", ErrorMessage = "Passwords don't match")]
     public string ConfirmPassword { get; set; }
     

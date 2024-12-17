@@ -9,6 +9,7 @@ using RPInventories.Models;
 using RPInventories.VewModels;
 
 namespace RPInventories.Pages.Users;
+
 public class CreateModel : PageModel
 {
     private readonly InventoriesContext _context;
@@ -23,7 +24,7 @@ public class CreateModel : PageModel
     }
 
     public IActionResult OnGet()
-    { 
+    {
         Profiles = new SelectList(_context.Profile, "Id", "Name");
         return Page();
     }
@@ -40,8 +41,8 @@ public class CreateModel : PageModel
             _serviceNotify.Error("Fix the problems before continue");
             return Page();
         }
-        
-        var existsUserDb = _context.Users.Any(u => 
+
+        var existsUserDb = _context.Users.Any(u =>
             u.Username.ToLower().Trim() == User.Username.ToLower().Trim());
         if (existsUserDb)
         {
@@ -54,7 +55,25 @@ public class CreateModel : PageModel
         _context.Users.Add(addUser);
         await _context.SaveChangesAsync();
         _serviceNotify.Success($"SUCCESS. Product {User.Username} added.");
-        
+
         return RedirectToPage("./Index");
     }
+    public async Task<JsonResult> OnGetExistsUsername(string username)
+    {
+        var existsUserDb = await _context.Users.AnyAsync(u =>
+            u.Username.ToLower().Trim() == username.ToLower().Trim());
+        
+        var existsUser = existsUserDb ? true : false;
+
+        return new JsonResult(new { existsUser });
+    }
+
 }
+
+
+
+
+
+
+
+
