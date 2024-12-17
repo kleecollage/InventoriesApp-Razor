@@ -24,6 +24,7 @@ public class DetailsModel : PageModel
         }
 
         var user = await _context.User
+            .Include(u => u.Profile)
             .AsNoTracking()
             .FirstOrDefaultAsync(m => m.Id == id);
         

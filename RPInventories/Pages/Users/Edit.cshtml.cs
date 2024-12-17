@@ -4,21 +4,25 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RPInventories.Data;
+using RPInventories.Helpers;
 using RPInventories.Models;
+using RPInventories.VewModels;
 
 namespace RPInventories.Pages.Users;
 public class EditModel : PageModel
 {
     private readonly InventoriesContext _context;
     private readonly INotyfService _serviceNotify;
+    private readonly FactoryUser _factoryUser;
 
-    public EditModel(InventoriesContext context, INotyfService serviceNotify)
+    public EditModel(InventoriesContext context, INotyfService serviceNotify, FactoryUser factoryUser)
     {
         _context = context;
         _serviceNotify = serviceNotify;
+        _factoryUser = factoryUser;
     }
 
-    [BindProperty] public new User User { get; set; }
+    [BindProperty] public new UserEditViewModel User { get; set; }
     public SelectList Profiles { get; set; }
 
     public async Task<IActionResult> OnGetAsync(int? id)
@@ -29,15 +33,16 @@ public class EditModel : PageModel
             return NotFound();
         }
 
-        User =  await _context.User.FirstOrDefaultAsync(u => u.Id == id);
+        var userDb =  await _context.User.FirstOrDefaultAsync(u => u.Id == id);
         
-        if (User == null)
+        if (userDb == null)
         {
             _serviceNotify.Warning($"User with ID {id} does not exist");
             return NotFound();
         }
         
-        Profiles = new SelectList(_context.Profile, "Id", "Name");
+        Profiles = new SelectList(_context.Profiles.AsNoTracking(), "Id", "Name");
+        User = _factoryUser.CreateUserEdit(userDb);
         
         return Page();
     }
@@ -48,22 +53,23 @@ public class EditModel : PageModel
     {
         if (!ModelState.IsValid)
         {
-            Profiles = new SelectList(_context.Profile.AsNoTracking(), "Id", "Name");
+            Profiles = new SelectList(_context.Profiles.AsNoTracking(), "Id", "Name");
             return Page();
         }
         
-        var existsUserDb = await _context.Users.AnyAsync(m => 
-            m.Name.ToLower().Trim() == User.Email.ToLower().Trim() && m.Id != User.Id);
+        var existsUserDb = await _context.Users.AnyAsync(u => 
+            u.Username.ToLower().Trim() == User.Username.ToLower().Trim() && u.Id != User.Id);
         
         if (existsUserDb)
         {
-            Profiles = new SelectList(_context.Brands.AsNoTracking(), "Id", "Email");
-            _serviceNotify.Warning($"User with email ${User.Email} already exists");
+            Profiles = new SelectList(_context.Profiles.AsNoTracking(), "Id", "Name");
+            _serviceNotify.Warning($"Username ${User.Username} already taken");
             return Page();
         }
 
-        _context.Attach(User).State = EntityState.Modified;
-
+        var userDb = await _context.Users.FindAsync(User.Id);
+        _factoryUser.UpdateDataUser(User, userDb);
+        
         try
         {
             await _context.SaveChangesAsync();
@@ -71,9 +77,7 @@ public class EditModel : PageModel
         catch (DbUpdateConcurrencyException)
         {
             if (!UserExists(User.Id))
-            {
                 return NotFound();
-            }
 
             throw;
         }
@@ -83,6 +87,6 @@ public class EditModel : PageModel
 
     private bool UserExists(int id)
     {
-        return _context.User.Any(e => e.Id == id);
+        return _context.Users.Any(e => e.Id == id);
     }
 }

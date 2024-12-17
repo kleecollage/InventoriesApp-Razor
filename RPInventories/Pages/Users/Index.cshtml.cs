@@ -33,7 +33,8 @@ public class IndexModel : PageModel
 
         if (!String.IsNullOrEmpty(SearchText))
         {
-            consult = consult.Where(p => p.Name.Contains(SearchText));
+            consult = consult.Where(u => u.Name.Contains(SearchText) 
+                                         || u.Username.Contains(SearchText));
         }
     
         TotalRecords = await consult.CountAsync();

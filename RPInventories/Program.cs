@@ -1,7 +1,11 @@
 using AspNetCoreHero.ToastNotification;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using RPInventories.Data;
+using RPInventories.Helpers;
+using RPInventories.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -20,7 +24,12 @@ builder.Services.AddNotyf(config =>
 // DB Context
 builder.Services.AddDbContext<InventoriesContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("InventoriesContext") ?? throw new InvalidOperationException("Connection string 'InventoriesContext' not found.")));
+
+builder.Services.AddSingleton<FactoryUser>();
+builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

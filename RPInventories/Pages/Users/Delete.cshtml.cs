@@ -24,15 +24,15 @@ public class DeleteModel : PageModel
         if (id == null) 
             return NotFound();
 
-        var user = await _context.User.FirstOrDefaultAsync(m => m.Id == id);
+        User = await _context.Users
+            .Include(u => u.Profile)
+            .FirstOrDefaultAsync(u => u.Id == id);
 
-        if (user == null)
+        if (User == null)
         {
-            _serviceNotify.Warning($"User ID must not be null");
+            _serviceNotify.Warning($"User not found");
             return NotFound();
         }
-
-        User = user;
         
         return Page();
     }
@@ -40,19 +40,17 @@ public class DeleteModel : PageModel
     public async Task<IActionResult> OnPostAsync(int? id)
     {
         if (id == null)
-        {
             return NotFound();
-        }
 
-        var user = await _context.User.FindAsync(id);
-        if (user != null)
+        User = await _context.Users.FindAsync(id);
+        
+        if (User != null)
         {
-            User = user;
-            _context.User.Remove(User);
+            _context.Users.Remove(User);
             await _context.SaveChangesAsync();
         }
         
-        _serviceNotify.Success($"SUCCESS. {User.Name} removed correctly!");
+        _serviceNotify.Success($"SUCCESS. {User.Username} removed correctly!");
         
         return RedirectToPage("./Index");
     }

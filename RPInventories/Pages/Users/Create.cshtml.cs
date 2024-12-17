@@ -4,18 +4,22 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RPInventories.Data;
+using RPInventories.Helpers;
 using RPInventories.Models;
+using RPInventories.VewModels;
 
 namespace RPInventories.Pages.Users;
 public class CreateModel : PageModel
 {
     private readonly InventoriesContext _context;
     private readonly INotyfService _serviceNotify;
+    private readonly FactoryUser _factoryUser;
 
-    public CreateModel(InventoriesContext context, INotyfService serviceNotify)
+    public CreateModel(InventoriesContext context, INotyfService serviceNotify, FactoryUser factoryUser)
     {
         _context = context;
         _serviceNotify = serviceNotify;
+        _factoryUser = factoryUser;
     }
 
     public IActionResult OnGet()
@@ -24,7 +28,7 @@ public class CreateModel : PageModel
         return Page();
     }
 
-    [BindProperty] public new User User { get; set; }
+    [BindProperty] public new UserRegisterViewModel User { get; set; }
     public SelectList Profiles { get; set; }
 
     // For more information, see https://aka.ms/RazorPagesCRUD.
@@ -37,16 +41,17 @@ public class CreateModel : PageModel
             return Page();
         }
         
-        var existsUserDb = _context.Users.Any(p => 
-            p.Name.ToLower().Trim() == User.Name.ToLower().Trim());
+        var existsUserDb = _context.Users.Any(u => 
+            u.Username.ToLower().Trim() == User.Username.ToLower().Trim());
         if (existsUserDb)
         {
-            Profiles = new SelectList(_context.Users.AsNoTracking(), "Id", "Email");
-            _serviceNotify.Error($"User with email ${User.Email} already exists");
+            Profiles = new SelectList(_context.Users.AsNoTracking(), "Id", "Name");
+            _serviceNotify.Error($"User with username ${User.Username} already taken");
             return Page();
         }
 
-        _context.User.Add(User);
+        var addUser = _factoryUser.CreateUser(User);
+        _context.Users.Add(addUser);
         await _context.SaveChangesAsync();
         _serviceNotify.Success($"SUCCESS. Product {User.Username} added.");
         
