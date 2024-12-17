@@ -23,6 +23,7 @@
     <ItemGroup>
       <Folder Include="Pages\Brands\" />
       <Folder Include="Pages\Departments\" />
+      <Folder Include="Pages\Products\" />
     </ItemGroup>
 
 </Project>
