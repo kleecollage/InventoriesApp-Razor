@@ -6,8 +6,15 @@ using Microsoft.EntityFrameworkCore;
 using RPInventories.Data;
 using RPInventories.Helpers;
 using RPInventories.Models;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+// Logs
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+builder.Logging.AddSerilog(logger); 
 
 // Add services to container.
 builder.Services.AddRazorPages(options =>
