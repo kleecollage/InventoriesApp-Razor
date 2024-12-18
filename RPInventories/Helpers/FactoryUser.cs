@@ -38,7 +38,8 @@ public class FactoryUser
             Email = user.Email,
             Name = user.Name,
             ProfileId = user.ProfileId,
-            Username = user.Username
+            Username = user.Username,
+            Photo = user.Photo
         };
     }
 

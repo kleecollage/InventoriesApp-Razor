@@ -6,10 +6,10 @@
 }
 
 <h4>@ViewData["Title"]</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
+<hr/>
+<form method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-6">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group mt-3">
                 <label asp-for="User.ProfileId" class="control-label"></label>
@@ -25,45 +25,67 @@
             </div>
             <div class="form-group">
                 <label asp-for="User.Name" class="control-label"></label>
-                <input asp-for="User.Name" class="form-control" />
+                <input asp-for="User.Name" class="form-control"/>
                 <span asp-validation-for="User.Name" class="text-danger"></span>
             </div>
             <div class="form-group mt-3">
                 <label asp-for="User.LastName" class="control-label"></label>
-                <input asp-for="User.LastName" class="form-control" />
+                <input asp-for="User.LastName" class="form-control"/>
                 <span asp-validation-for="User.LastName" class="text-danger"></span>
             </div>
             <div class="form-group mt-3">
-                <label asp-for="User.Username" class="control-label" ></label>
-                <input asp-for="User.Username" class="form-control" />
+                <label asp-for="User.Username" class="control-label"></label>
+                <input asp-for="User.Username" class="form-control"/>
                 <span asp-validation-for="User.Username" class="text-danger"></span>
             </div>
             <div class="form-group mt-3">
                 <label asp-for="User.Email" class="control-label"></label>
-                <input asp-for="User.Email" class="form-control" />
+                <input asp-for="User.Email" class="form-control"/>
                 <span asp-validation-for="User.Email" class="text-danger"></span>
             </div>
             <div class="form-group mt-3">
                 <label asp-for="User.Phone" class="control-label"></label>
-                <input asp-for="User.Phone" class="form-control" />
+                <input asp-for="User.Phone" class="form-control"/>
                 <span asp-validation-for="User.Phone" class="text-danger"></span>
             </div>
             <div class="form-group mt-3">
                 <label asp-for="User.Password" class="control-label"></label>
-                <input asp-for="User.Password" class="form-control" />
+                <input asp-for="User.Password" class="form-control"/>
                 <span asp-validation-for="User.Password" class="text-danger"></span>
             </div>
             <div class="form-group mt-3">
                 <label asp-for="User.ConfirmPassword" class="control-label"></label>
-                <input asp-for="User.ConfirmPassword" class="form-control" />
+                <input asp-for="User.ConfirmPassword" class="form-control"/>
                 <span asp-validation-for="User.ConfirmPassword" class="text-danger"></span>
             </div>
             <div class="form-group mt-3">
                 <partial name="Partials/Actions/_Create"/>
             </div>
-        </form>
+        </div>
+        @* Images implementation *@
+        <div class="col-md-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="User.Photo" style="width: 100%;"></label>
+                @if (Model.User.Photo != null)
+                {
+                    <img id="photo" style="width:350px;height:350px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.User.Photo))">
+                }
+                else
+                {
+                    <img id="photo" style="width:350px;height:350px; object-fit:cover" src="">
+                }
+                <input type="file"
+                       accept=".png,.jpg,.jpeg,.gif,.tif"
+                       asp-for="User.Photo"
+                       class="form-control"
+                       onchange="document.getElementById('photo').src = window.URL.createObjectURL(this.files[0])" />
+                <span asp-validation-for="User.Photo" class="text-danger"></span>
+            </div>
+        </div>
+        @* Images implementation  *@
     </div>
-</div>
+</form>
 <span class="fa-solid fa-spinner fa-5x spinner" id="ajax-loader"></span>
 
 @section Scripts
@@ -72,9 +94,9 @@
     <script src="~/js/servicios-ajax.js"></script>
     <script src="~/js/servicio-datos.js"></script>
     <script src="~/js/crearusuariovm.js"></script>
-    
+
     @{
         await Html.RenderPartialAsync("Shared/_ValidationScriptsPartial");
-    } 
+    }
 }
 

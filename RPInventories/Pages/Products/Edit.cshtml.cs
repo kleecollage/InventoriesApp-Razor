@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RPInventories.Data;
+using RPInventories.Helpers;
 using RPInventories.Models;
+using RPInventories.VewModels;
 
 namespace RPInventories.Pages.Products;
 public class EditModel : PageModel
@@ -18,7 +20,7 @@ public class EditModel : PageModel
         _serviceNotify = serviceNotify;
     }
 
-    [BindProperty] public Product Product { get; set; }
+    [BindProperty] public ProductCreateEditViewModel Product { get; set; }
     public SelectList Brands { get; set; }
 
     public async Task<IActionResult> OnGetAsync(int? id)
@@ -29,14 +31,28 @@ public class EditModel : PageModel
             return NotFound();
         }
 
-        Product =  await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
-        if (Product == null)
+        var productDb =  await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+        if (productDb == null)
         {
             _serviceNotify.Warning($"Product with ID {id} does not exist");
             return NotFound();
         }
         
         Brands = new SelectList(_context.Brands.AsNoTracking(), "Id", "Name");
+        Product = new ProductCreateEditViewModel
+        {
+            Id = productDb.Id,
+            Name = productDb.Name,
+            Description = productDb.Description,
+            Price = productDb.Price,
+            Status = productDb.Status,
+            BrandId = productDb.BrandId,
+        };
+
+        if (!String.IsNullOrEmpty(productDb.Image))
+        {
+            Product.Image = await Utilerias.ConvertirImagenABytes(productDb.Image);
+        }
         
         return Page();
     }
@@ -60,8 +76,31 @@ public class EditModel : PageModel
             _serviceNotify.Warning($"Product with name ${Product.Name} already exists");
             return Page();
         }
+
+        var productDb = await _context.Products.FindAsync(Product.Id);
+        productDb.Name = Product.Name;
+        productDb.Description = Product.Description;
+        productDb.Price = Product.Price;
+        productDb.Status = Product.Status;
+        productDb.BrandId = Product.BrandId;
         
-        _context.Attach(Product).State = EntityState.Modified;
+        /*var productDb = new Product
+        {
+            Id = Product.Id,
+            Name = Product.Name,
+            Description = Product.Description,
+            Price = Product.Price,
+            BrandId = Product.BrandId,
+            Status = Product.Status,
+        };*/
+
+        if (Request.Form.Files.Count > 0)
+        {
+            IFormFile file = Request.Form.Files.FirstOrDefault();
+            productDb.Image = await Utilerias.LeerImagen(file);
+        }
+        
+        // _context.Attach(productDb).State = EntityState.Modified;
 
         try
         {

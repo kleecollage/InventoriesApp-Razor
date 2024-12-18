@@ -1,15 +1,16 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using RPInventories.Models;
 
-namespace RPInventories.Models;
+namespace RPInventories.VewModels;
 
-public class Product
+public class ProductCreateEditViewModel
 {
     public int Id { get; set; }
     
     [Required(ErrorMessage = "Product name is required")]
     [MinLength(5, ErrorMessage = "Product name must be at least 5 characters long"), 
-        MaxLength(50, ErrorMessage = "Product name cannot exceed 50 characters")]
+     MaxLength(50, ErrorMessage = "Product name cannot exceed 50 characters")]
     public string Name { get; set; }
     
     [StringLength(200, MinimumLength = 5, 
@@ -30,15 +31,5 @@ public class Product
     [Required(ErrorMessage = "Product status is required")]
     public StatusProduct Status { get; set; } = StatusProduct.Active;
     
-    [Display(Name = "Product image")]
-    public string Image { get; set; }
+    public byte[] Image { get; set; }
 }
-
-
-
-
-
-
-
-
-

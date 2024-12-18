@@ -7,20 +7,20 @@
 }
 
 <h4>@ViewData["Title"]</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
+<hr/>
+<form method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-6">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Product.Id" />
+            <input type="hidden" asp-for="Product.Id"/>
             <div class="form-group">
                 <label asp-for="Product.Name" class="control-label"></label>
-                <input asp-for="Product.Name" class="form-control" />
+                <input asp-for="Product.Name" class="form-control"/>
                 <span asp-validation-for="Product.Name" class="text-danger"></span>
             </div>
             <div class="form-group mt-3">
                 <label asp-for="Product.Description" class="control-label"></label>
-                <textarea asp-for="Product.Description" class="form-control" ></textarea>
+                <textarea asp-for="Product.Description" class="form-control"></textarea>
                 <span asp-validation-for="Product.Description" class="text-danger"></span>
             </div>
             <div class="form-group mt-3">
@@ -38,7 +38,7 @@
             <div class="form-group mt-3">
                 <span class="text-danger">*</span>
                 <label asp-for="Product.Price" class="control-label"></label>
-                <input asp-for="Product.Price" class="form-control" />
+                <input asp-for="Product.Price" class="form-control"/>
                 <span asp-validation-for="Product.Price" class="text-danger"></span>
             </div>
             <div class="form-group mt-3">
@@ -48,7 +48,7 @@
                         <i class="fa-solid fa-book-open"></i>
                     </label>
                     <select asp-for="Product.Status" class="form-select"
-                            asp-items="Html.GetEnumSelectList<StatusProduct>()" >
+                            asp-items="Html.GetEnumSelectList<StatusProduct>()">
                         <option value="">--Select Status--</option>
                     </select>
                 </div>
@@ -57,9 +57,34 @@
             <div class="form-group mt-3">
                 <partial name="Partials/Actions/_Edit"/>
             </div>
-        </form>
+        </div>
+        @* Images Implementation *@
+        <div class="col-md-6">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Product.Image" style="width: 100%;"></label>
+                @if (Model.Product.Image != null)
+                {
+                    <img id="image" 
+                         class="img-fluid" 
+                         src="data:image/*;base64,@(Convert.ToBase64String(Model.Product.Image))" >
+                }
+                else
+                {
+                    <img id="image" class="img-fluid" src="" >
+                }
+                <input type="file"
+                       accept=".png,.jpg,.jpeg,.gif,.tif"
+                       asp-for="Product.Image"
+                       class="form-control"
+                       onchange="document.getElementById('image').src = window.URL.createObjectURL(this.files[0])" />
+                <span asp-validation-for="Product.Image" class="text-danger"></span>
+            </div>
+        </div>
+        @* Images Implementation *@
     </div>
-</div>
+</form>
+
 @section Scripts
 {
     @{

@@ -30,4 +30,7 @@ public class User
     public int ProfileId { get; set; }
     
     public Profile Profile { get; set; }
+    
+    [Display(Name = "Profile image")]
+    public byte[] Photo { get; set; }
 }

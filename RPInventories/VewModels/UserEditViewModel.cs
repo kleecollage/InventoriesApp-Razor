@@ -25,4 +25,6 @@ public class UserEditViewModel
     [Required(ErrorMessage = "User profile is required")]
     [Display(Name = "Profile")]
     public int ProfileId { get; set; }
+
+    public byte[] Photo { get; set; }
 }

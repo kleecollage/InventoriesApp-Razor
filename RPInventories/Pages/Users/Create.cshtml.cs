@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RPInventories.Data;
 using RPInventories.Helpers;
-using RPInventories.Models;
 using RPInventories.VewModels;
 
 namespace RPInventories.Pages.Users;
@@ -26,6 +25,7 @@ public class CreateModel : PageModel
     public IActionResult OnGet()
     {
         Profiles = new SelectList(_context.Profile, "Id", "Name");
+        User = new UserRegisterViewModel();
         return Page();
     }
 
@@ -52,9 +52,18 @@ public class CreateModel : PageModel
         }
 
         var addUser = _factoryUser.CreateUser(User);
+
+        if (Request.Form.Files.Count > 0)
+        {
+            IFormFile file = Request.Form.Files.FirstOrDefault();
+            using var dataStream = new MemoryStream();
+            await file.CopyToAsync(dataStream);
+            addUser.Photo = dataStream.ToArray();
+        }
+        
         _context.Users.Add(addUser);
         await _context.SaveChangesAsync();
-        _serviceNotify.Success($"SUCCESS. Product {User.Username} added.");
+        _serviceNotify.Success($"SUCCESS!. User {User.Username} created.");
 
         return RedirectToPage("./Index");
     }

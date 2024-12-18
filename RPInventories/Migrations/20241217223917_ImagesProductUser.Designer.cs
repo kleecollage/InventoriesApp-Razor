@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RPInventories.Data;
 
@@ -11,9 +12,11 @@ using RPInventories.Data;
 namespace RPInventories.Migrations
 {
     [DbContext(typeof(InventoriesContext))]
-    partial class InventoriesContextModelSnapshot : ModelSnapshot
+    [Migration("20241217223917_ImagesProductUser")]
+    partial class ImagesProductUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
